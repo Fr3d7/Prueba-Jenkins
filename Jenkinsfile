@@ -16,7 +16,7 @@ pipeline {
                         def scannerHome = tool 'sonar-scanner-win'
 
                         // 2. usa el token que guardaste en Jenkins como credencial tipo "Secret text"
-                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'squ_c892ec834c9f1e88d89747a907469cc89088e91d')]) {
 
                             bat """
                             "${scannerHome}\\bin\\sonar-scanner.bat" ^
