@@ -12,16 +12,20 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonar-local') {
                     script {
-                        // Obtiene la ruta del sonar-scanner que definiste en Global Tool Configuration
+                        // 1. obtiene la ruta real al scanner que definiste como sonar-scanner-win
                         def scannerHome = tool 'sonar-scanner-win'
 
-                        bat """
-                        "${scannerHome}\\bin\\sonar-scanner.bat" ^
-                          -Dsonar.projectKey=Prueba-Jenkins ^
-                          -Dsonar.sources=. ^
-                          -Dsonar.host.url=http://localhost:9000 ^
-                          -Dsonar.login=${env.squ_c892ec834c9f1e88d89747a907469cc89088e91d}
-                        """
+                        // 2. usa el token que guardaste en Jenkins como credencial tipo "Secret text"
+                        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
+
+                            bat """
+                            "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                              -Dsonar.projectKey=Prueba-Jenkins ^
+                              -Dsonar.sources=. ^
+                              -Dsonar.host.url=http://localhost:9000 ^
+                              -Dsonar.login=%squ_c892ec834c9f1e88d89747a907469cc89088e91d%
+                            """
+                        }
                     }
                 }
             }
